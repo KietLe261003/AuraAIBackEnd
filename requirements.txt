@@ -29,5 +29,8 @@ python-multipart==0.0.6
 psycopg2-binary==2.9.9
 greenlet==3.0.3
 
+uvicorn
+gunicorn
+
 # Cần cho tính năng auto-reload của uvicorn (như trong log của bạn)
 # watchfiles==0.21.0
