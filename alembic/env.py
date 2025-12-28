@@ -13,6 +13,7 @@ from app.models.task import Task
 from app.models.task_depends_on import TaskDependsOn
 from app.models.project_user import ProjectUser
 from app.models.project_category import ProjectCategory
+from app.models.user import User
 from app.core.config import settings
 
 # this is the Alembic Config object, which provides

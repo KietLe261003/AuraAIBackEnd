@@ -4,11 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.v1.router import api_router
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.db.session import get_db
-
 app = FastAPI(
     title=settings.APP_NAME,
     description="AuraAI Backend API - Project & Task Management",
