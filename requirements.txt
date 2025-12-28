@@ -34,4 +34,4 @@ gunicorn
 
 # Cần cho tính năng auto-reload của uvicorn (như trong log của bạn)
 # watchfiles==0.21.0
-
+email-validator>=2.0.0
