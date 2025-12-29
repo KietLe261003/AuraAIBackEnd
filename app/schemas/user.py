@@ -7,7 +7,21 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+class User(BaseModel):
+    id: int
+    email: EmailStr
+    full_name: Optional[str] = None
+    is_admin: bool
+    created_at: datetime
+    updated_at: datetime
 
+class ResponseUser(BaseModel):
+    user: User
+    access_token: str
+    expires_in: int
 class UserOut(BaseModel):
     id: int
     email: str

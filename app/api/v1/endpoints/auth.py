@@ -1,27 +1,26 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from app.schemas.response import APIResponse
+from app.schemas.user import LoginRequest
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.core.config import settings
 from app.core.security import create_access_token
 from app.services.auth_service import authenticate_user
 from app.schemas.token import Token
-from app.schemas.user import UserLogin
-
+from app.schemas.user import UserLogin, ResponseUser
 router = APIRouter()
-
-
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=APIResponse[ResponseUser])
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    form_data: LoginRequest,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    OAuth2 compatible login endpoint.
+    JSON login endpoint.
     Authenticates user with email and password, returns Bearer Token.
     """
-    user = await authenticate_user(db, form_data.username, form_data.password)
+    user = await authenticate_user(db, form_data.email, form_data.password)
     
     if not user:
         raise HTTPException(
@@ -36,7 +35,21 @@ async def login(
         expires_delta=access_token_expires
     )
     
-    return Token(access_token=access_token, token_type="bearer")
+    # Convert SQLAlchemy model to Pydantic model
+    from app.schemas.user import User as UserSchema
+    user_data = UserSchema.model_validate(user)
+    
+    response_user = ResponseUser(
+        user=user_data,
+        access_token=access_token,
+        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    )
+    
+    return APIResponse(
+        success=True,
+        message="Login successful",
+        data=response_user
+    )
 
 
 @router.post("/login/json", response_model=Token)
